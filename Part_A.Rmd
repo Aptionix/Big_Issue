@@ -184,7 +184,7 @@ SS_Africa_W_Ineq <- read_excel("Data/Sub_Sahara_Africa_Wealth_Inequality.xlsx",
 SS_Asia_I_Ineq <- read_excel("Data/SAndSE_Asia_Income_Inequality.xls",
   col_names = FALSE
 )
-SS_Asia_W_Ineq <- read_excel("Data/SAndSE_Asia_Wealth_Inequality.xlsx",
+SS_Asia_W_Ineq <- read_excel("Data/SAndSE_Asia_Wealth_Inequality.xls",
   col_names = FALSE
 )
 
@@ -227,7 +227,7 @@ W_I_Gini <- function(df1, df2, df3, df4) {
 }
 
 Africa_Inequality <- W_I_Gini(
-  SS_Africa_I_Ineq_wider, SS_Africa_W_Ineq_wider, 
+  SS_Africa_I_Ineq_wider, SS_Africa_W_Ineq_wider,
   Ken_I_Ineq_wider, Ken_W_Ineq_wider
 )
 
@@ -239,17 +239,26 @@ SS_Asia_Inequality <- W_I_Gini(
 
 # Compare Sub_Sahara Africa with Kenya
 
-Africa_Inequality %>% ggplot(aes(x = Year, y = Gini_Coeff, 
-                                 colour = Country, linetype = Category))+
-  geom_line()+
-  geom_point()+
-  scale_colour_manual(values = 
-    c("Kenya" = "#E69F00", "Sub-Saharan Africa (PPP)" = "#56B4E9",
-      labels = c("Sub-Saharan Africa (PPP)" = "Sub-Saharan Africa",
-                 "Kenya" = "Kenya"))
-  )+
-  scale_linetype_manual(values = 
-                          c("Wealth" = "dashed", "Income" = "solid"))+
+Africa_Inequality %>% ggplot(aes(
+  x = Year, y = Gini_Coeff,
+  colour = Country, linetype = Category
+)) +
+  geom_line() +
+  geom_point() +
+  scale_colour_manual(
+    values =
+      c(
+        "Kenya" = "#E69F00", "Sub-Saharan Africa (PPP)" = "#56B4E9",
+        labels = c(
+          "Sub-Saharan Africa (PPP)" = "Sub-Saharan Africa",
+          "Kenya" = "Kenya"
+        )
+      )
+  ) +
+  scale_linetype_manual(
+    values =
+      c("Wealth" = "dashed", "Income" = "solid")
+  ) +
   labs(
     title = "Gini Coefficient Comparison",
     subtitle = "Kenya v.s. Sub-Saharan Africa",
@@ -259,26 +268,75 @@ Africa_Inequality %>% ggplot(aes(x = Year, y = Gini_Coeff,
   theme_classic()
 
 
-
 # Compare South and Southeast Asia with Bangladesh
 
-SS_Asia_Inequality %>% ggplot(aes(x = Year, y = Gini_Coeff,
-                               colour = Country, linetype = Category))+
-  geom_line()+
-  geom_point()+
+SS_Asia_Inequality %>% ggplot(aes(
+  x = Year, y = Gini_Coeff,
+  colour = Country, linetype = Category
+)) +
+  geom_line() +
+  geom_point() +
   scale_color_manual(
     values = c("Bangladesh" = "#E69F00", "South & Southeast Asia (PPP)" = "#56b4e9"),
-               labels = c("Bangladesh" = "Bangladesh", 
-                          "South & Southeast Asia (PPP)" = "South & Southeast Asia")
-  )+
+    labels = c(
+      "Bangladesh" = "Bangladesh",
+      "South & Southeast Asia (PPP)" = "South & Southeast Asia"
+    )
+  ) +
   scale_linetype_manual(
     values = c("Wealth" = "dashed", "Income" = "solid")
-  )+
+  ) +
   labs(
     title = "Gini Coefficient Comparison",
     subtitle = "South & Southeast Asia v.s. Bangladesh",
     x = "Year",
     y = "Gini Coefficient"
-  )+
+  ) +
   theme_classic()
 ```
+
+
+
+# AI Usage
+
+AI language models, such as ChatGPT and Claude, were used during the development of this project, particularly in the coding component. I will provide a detailed explanation of how these tools were used.
+
+1. Coding Support
+
+AI tools are generally used to help clarify the usage of certain functions, and 
+advise on improvement in plotting. For instance, in the plot of question 2, where
+a graph comparing the income and wealth inequality were drawn, one would like to 
+add a legend to side of the plot. Hence, one wrote the following prompt in Claude:
+
+> I have drew a plot, year against Gini coefficient, and in that plot I compared 
+Gini coefficient of two countries in terms of income and wealth respectively. I 
+have used function scale_colour_manual() to assign each country a colour, how should
+I add a legend on the side and rename the country/region labels as they are not in the
+desired form. Also, give me a pair of contract colour in Unicode format.
+
+2. Git and Version Control:
+
+AI also played a significant role in supporting our group's use of Git. As we 
+chose GitHub for code sharing and were initially unfamiliar with Git workflow, 
+AI tools guided us through installing Git, connecting to a remote repository, 
+resolving file-upload conflicts, etc. Claude was particularly helpful during a 
+file conflict that nearly caused loss of data, offering step-by-step instruction
+to recover overwritten work. Example prompts include:
+
+> Walk me through the process of pushing a file onto our GitHub repository.
+
+> Remind me, how to push files to a new repository?
+
+> What is the difference between rebase true/false and fast forward only?
+
+
+
+
+
+
+
+
+
+
+
+
