@@ -1,6 +1,7 @@
 ---
 title: "Question 1 & 2"
-output: pdf_document
+output: 
+  pdf_document: default
 date: "`r Sys.Date()`"
 ---
 
@@ -10,6 +11,9 @@ library(ggplot2)
 library(tidyverse)
 library(readr)
 library(readxl)
+library(ggforce)
+library(corrplot)
+library(knitr)
 ```
 
 # Data
@@ -205,17 +209,23 @@ SS_Africa_W_Ineq_longer <- longer_format(SS_Africa_W_Ineq_wider)
 SS_Asia_I_Ineq_longer <- longer_format(SS_Asia_I_Ineq_wider)
 SS_Asia_W_Ineq_longer <- longer_format(SS_Asia_W_Ineq_wider)
 
+
 # Then we draw a line chart to compare the income and wealth distribution.
-# For simplicity, we compare the Gini coefficient only for now.
+
+# We will draw two types of graphs, one only includes Gini coefficient, and the
+# other one include all indicators
+# Since the data between 1820 and 1980 is not recorded as frequent and without 
+# too much fluctuation, thus less important and valid comparing with one after. 
+# So one would ignore the part before 1950 to make room for more recent data.
+
 # So we write a function first to combine the df's into one.
 
-# NOTE: write in order of regional income, regional wealth, country income, country wealth
-W_I_Gini <- function(df1, df2, df3, df4) {
+W_I_Combine <- function(df1, df2, df3, df4) {
   Keep_Gini_Only <- function(x, y) {
     x %>%
-      select(Country, Year, Gini_Coeff) %>%
       mutate(Category = ifelse(y == "I", "Income", "Wealth"))
-  }
+  } %>% 
+    filter(Year >= 1950)
 
   df1 <- Keep_Gini_Only(df1, "I")
   df2 <- Keep_Gini_Only(df2, "W")
@@ -226,23 +236,25 @@ W_I_Gini <- function(df1, df2, df3, df4) {
   return(df)
 }
 
-Africa_Inequality <- W_I_Gini(
-  SS_Africa_I_Ineq_wider, SS_Africa_W_Ineq_wider,
-  Ken_I_Ineq_wider, Ken_W_Ineq_wider
+Africa_Inequality <- W_I_Combine(
+  SS_Africa_I_Ineq_longer, SS_Africa_W_Ineq_longer,
+  Ken_I_Ineq_longer, Ken_W_Ineq_longer
 )
 
-SS_Asia_Inequality <- W_I_Gini(
-  SS_Asia_I_Ineq_wider, SS_Asia_W_Ineq_wider,
-  Bang_I_Ineq_wider, Bang_W_Ineq_wider
+SS_Asia_Inequality <- W_I_Combine(
+  SS_Asia_I_Ineq_longer, SS_Asia_W_Ineq_longer,
+  Bang_I_Ineq_longer, Bang_W_Ineq_longer
 )
 
 
 # Compare Sub_Sahara Africa with Kenya
 
-Africa_Inequality %>% ggplot(aes(
-  x = Year, y = Gini_Coeff,
-  colour = Country, linetype = Category
-)) +
+Africa_Inequality %>%
+  filter(Indicator == "Gini_Coeff") %>%
+  ggplot(aes(
+    x = Year, y = Value,
+    colour = Country, linetype = Category
+  )) +
   geom_line() +
   geom_point() +
   scale_colour_manual(
@@ -270,10 +282,12 @@ Africa_Inequality %>% ggplot(aes(
 
 # Compare South and Southeast Asia with Bangladesh
 
-SS_Asia_Inequality %>% ggplot(aes(
-  x = Year, y = Gini_Coeff,
-  colour = Country, linetype = Category
-)) +
+SS_Asia_Inequality %>%
+  filter(Indicator == "Gini_Coeff") %>%
+  ggplot(aes(
+    x = Year, y = Value,
+    colour = Country, linetype = Category
+  )) +
   geom_line() +
   geom_point() +
   scale_color_manual(
@@ -293,6 +307,47 @@ SS_Asia_Inequality %>% ggplot(aes(
     y = "Gini Coefficient"
   ) +
   theme_classic()
+
+
+# Comparing All indices
+## Sub-Saharan Africa and Kenya
+
+Africa_Inequality %>% ggplot(aes(
+  x = Year, y = Value,
+  shape = Indicator, colour = Country,
+  linetype = Category
+)) +
+  geom_point(alpha = 0.3) +
+  geom_line(alpha = 0.8) +
+  labs(title = "Income and Wealth Inequality Comparison",
+       subtitle = "Kenya v.s. Sub-Saharan Africa")
+
+# South and Southeast Asia and Bangladesh
+SS_Asia_Inequality %>% ggplot(aes(
+  x = Year, y = Value,
+  shape = Indicator, colour = Country,
+  linetype = Category
+)) +
+  geom_point(alpha = 0.3) +
+  geom_line(alpha = 0.8) +
+  labs(title = "Income and Wealth Inequality Comparison",
+       subtitle = "Bangladesh v.s. South & Southeast Asia")
+
+# Correlation between Gini Coefficient and other indicators
+
+Corr_with_Gini <- bind_rows(Africa_Inequality, SS_Asia_Inequality) %>% 
+  pivot_wider(names_from = Indicator, values_from = Value) %>% 
+  group_by(Category) %>% 
+  summarise(across(c(Share_Bottom50, Share_Middle40, Share_Top10, Share_Top1), 
+                   ~cor(Gini_Coeff, .x))) %>% 
+  pivot_longer(-Category, names_to = "Indicator", values_to = "Correlation")
+
+kable(Corr_with_Gini, format = "markdown",
+      caption = "Correlation between Gini and Other Indicators")
+# From this table, we can see that there is a strong correlation between Gini and 
+# the other indicators of income and wealth distribution, so for simplicity and 
+# clarity, we may only concentrate on Gini alone, but one would leave the last
+# two graphs for reference.
 ```
 
 
@@ -328,15 +383,3 @@ to recover overwritten work. Example prompts include:
 > Remind me, how to push files to a new repository?
 
 > What is the difference between rebase true/false and fast forward only?
-
-
-
-
-
-
-
-
-
-
-
-
