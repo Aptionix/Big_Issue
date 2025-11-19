@@ -12,3 +12,17 @@ in the futurte for convenience. (do check out the Question1.Rmd importing that c
 For the data: I have included Gini coefficient, share of income/wealth of the top 1%, top 10%, bottom 50%, and middle 40% for each of them.
 
 —— Haoxuan
+
+
+
+## 19 Nov
+
+For Question 2 plots, I changed the starting point of x axis (Year) to be 1950, 
+so that it leaves more room for the data after 1980 which is more frequently 
+recorded. Add I added a correlation table at the end compare the correlation 
+between Gini coefficient and the other indicators, and it shows a strong correlation.
+So maybe we can omit the last two plots for all the indicators?
+
+—— Haoxuan
+
+
