@@ -7,9 +7,7 @@ date: "`r Sys.Date()`"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(ggplot2)
 library(tidyverse)
-library(readr)
 library(readxl)
 library(ggforce)
 library(corrplot)
