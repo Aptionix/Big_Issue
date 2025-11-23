@@ -286,8 +286,8 @@ Africa_Inequality %>%
     x = Year, y = Value,
     colour = Country, linetype = Category
   )) +
-  geom_line() +
-  geom_point() +
+  geom_line(linewidth = 0.5) +
+  geom_point(size= 1) +
   scale_colour_manual(
     values =
       c(
@@ -308,7 +308,7 @@ Africa_Inequality %>%
     x = "Year",
     y = "Gini Coefficient"
   ) +
-  theme_classic()
+  theme_classic(base_size = 10)
 
 
 # Compare South and Southeast Asia with Bangladesh
@@ -319,8 +319,8 @@ SS_Asia_Inequality %>%
     x = Year, y = Value,
     colour = Country, linetype = Category
   )) +
-  geom_line() +
-  geom_point() +
+  geom_line(linewidth = 0.5) +
+  geom_point(size = 1) +
   scale_color_manual(
     values = c("Bangladesh" = "#E69F00", "South & Southeast Asia (PPP)" = "#56b4e9"),
     labels = c(
@@ -337,7 +337,7 @@ SS_Asia_Inequality %>%
     x = "Year",
     y = "Gini Coefficient"
   ) +
-  theme_classic()
+  theme_classic(base_size = 10)
 
 
 # Comparing All indices

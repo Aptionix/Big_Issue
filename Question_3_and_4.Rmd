@@ -16,7 +16,7 @@ For referencing, please refer to the referencing Felix has completed, as I have 
 
 ```{r import-data, message=FALSE, warning=FALSE}
 # !!! DON"T FORGET TO CHANGE THE WORKING DIRECTORY TO YOUR OWN DIRECTORY !!!
-setwd("/Users/charliedicker/Downloads/Big_Issue-main/Data")
+setwd("~/R/BI_Group_Proj/Data")
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(tidyverse)
@@ -518,7 +518,7 @@ Ken_Trade_Growth_Corr_spearman <- cor(All_Data_Ken$Ken_Trade, All_Data_Ken$Growt
 Chunk with functions to display the graph
 
 
-```{r plotting1, fig.width=5, fig.height=3, dpi=200}
+```{r plotting1, warning=FALSE}
 
 # Graphing Bangladesh Trade vs Gini
 (ggplot(All_Data_Bang, aes(x = Bang_Trade, y = Gini_Coeff, colour = factor(flag_gi))) +
